@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ÇÇP - Kartlar</title>
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#14b8a6">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .mode-switch {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mode-btn.active {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 10px rgba(20,184,166,0.25);
+    }
+
+    /* Kart alanı */
+    .card-deck {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card {
+      position: absolute;
+      width: 90%;
+      max-width: 420px;
+      height: 65vh;
+      border-radius: 20px;
+      background: var(--color-surface);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      user-select: none;
+      cursor: grab;
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+    }
+
+    .card p {
+      color: var(--color-text-secondary);
+      font-size: 1rem;
+    }
+
+    .swipe-left { transform: translateX(-150%) rotate(-10deg); opacity: 0; }
+    .swipe-right { transform: translateX(150%) rotate(10deg); opacity: 0; }
+
+    .fixed-button {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    #addBulkBtn {
+      display: inline-flex;
+    }
+    /* Kart flip yapısı */
+.card-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-front, .card-back {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.card-back {
+  gap: 1rem;
+}
+
+/* Kart aksiyon butonları */
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.card-action-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.edit-btn {
+  background: var(--color-primary);
+  color: white;
+}
+
+.edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(20,184,166,0.3);
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+}
+/* Büyük modal */
+.modal-large {
+  max-width: 700px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Toplu kart konteyneri */
+.bulk-cards-container {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  max-height: 50vh;
+}
+
+/* Tek bir kart satırı */
+.bulk-card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 40px;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  align-items: start;
+}
+
+.bulk-card-row input,
+.bulk-card-row textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.bulk-card-row input:focus,
+.bulk-card-row textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.bulk-card-row textarea {
+  resize: none;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.bulk-delete-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.bulk-delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+/* Klavye kısayol göstergesi */
+kbd {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.85em;
+  font-family: monospace;
+}
+
+/* BU KODU EKLEYİN */
+@media (max-height: 750px) {
+  .card-deck {
+    /* Kartların bulunduğu ana alanın yüksekliğini biraz azaltalım */
+    height: 65vh;
+    /* ÖNEMLİ: Alttaki sabit butonun yüksekliği kadar bir iç boşluk ekleyerek
+      kartların butonun arkasına kaymasını engelleyelim.
+    */
+    padding-bottom: 90px; 
+    box-sizing: border-box; /* Padding'in yüksekliğe dahil edilmesini sağlar */
+  }
+
+  .card {
+    /* Kartın kendi yüksekliğini de yeni alana sığacak şekilde azaltalım */
+    height: 60vh;
+  }
+}
+
+    @media (max-width: 768px) {
+      #addBulkBtn { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header" style="justify-content: space-between;">
+    <button class="btn-back" onclick="goBack()">
+      <i data-lucide="arrow-left"></i>
+    </button>
+    <h1 class="header__logo">ÇÇP</h1>
+    <div></div>
+  </header>
+
+  <div class="mode-switch">
+    <button id="noteViewBtn" class="mode-btn">📖 Not Görünümü</button>
+    <button id="flipViewBtn" class="mode-btn active">🔁 Kart Görünümü</button>
+  </div>
+
+  <main class="card-deck" id="cardDeck"></main>
+
+  <div class="fixed-button">
+    <button class="btn-add" id="addCardBtn">➕ Kart Ekle</button>
+    <button class="btn-add btn-secondary" id="addBulkBtn">📚 Kart Dizini Ekle</button>
+  </div>
+
+  <div class="modal-overlay" id="cardModalOverlay" onclick="closeCardModalOnOverlay(event)">
+    <div class="modal">
+      <h3 class="modal__title">Yeni Kart Ekle</h3>
+      <input type="text" class="modal__input" id="cardFront" placeholder="Kart Başlığı (ön yüz)">
+      <textarea class="modal__input" id="cardBack" placeholder="Kart Bilgisi (arka yüz)" rows="4"></textarea>
+      <div class="modal__buttons">
+        <button class="modal__button modal__button--secondary" onclick="closeCardModal()">İptal</button>
+        <button class="modal__button modal__button--primary" onclick="addCard()">Ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="bulkModalOverlay" onclick="closeBulkModalOnOverlay(event)">
+  <div class="modal modal-large" onclick="event.stopPropagation()">
+    <h3 class="modal__title">📚 Kart Dizini Ekle</h3>
+    <p style="color: var(--color-text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+      Başlık yazıp <kbd>Tab</kbd> tuşuna basın, açıklama yazıp <kbd>Enter</kbd> tuşuna basın.
+    </p>
+    <div id="bulkCardsContainer" class="bulk-cards-container">
+      </div>
+    <div class="modal__buttons">
+      <button class="modal__button modal__button--secondary" onclick="closeBulkModal()">İptal</button>
+      <button class="modal__button modal__button--primary" onclick="saveBulkCards()">💾 Hepsini Kaydet</button>
+    </div>
+  </div>
+</div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Bu fonksiyon, bir önceki sayfaya dinamik olarak dönmek için eklenmiştir.
+    function goBack() {
+      // Tarayıcı geçmişinde bir önceki sayfaya gitmeye çalış
+      if (document.referrer && !document.referrer.includes('login.html')) {
+        window.history.back();
+      } else {
+        // Eğer geçmiş yoksa veya login sayfası ise, varsayılan olarak units.html'e git
+        window.location.href = 'units.html';
+      }
+    }
+  </script>
+  <script type="module" src="auth-guard.js"></script>
+  <script type="module" src="cards.js"></script>
+</body>
+</html>

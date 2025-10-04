@@ -1,0 +1,600 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-primary: #14d3bd;
+  --color-bg: #f9fafb;
+  --color-surface: #ffffff;
+  --color-text: #14263f;
+  --color-text-secondary: #6b7280;
+  --color-border: #e5e7eb;
+  --radius: 16px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+
+  /* UI helpers */
+  --tap-size: 36px;
+  --menu-min-width: 120px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #111827;
+    --color-surface: #1f2937;
+    --color-text: #f9fafb;
+    --color-text-secondary: #9ca3af;
+    --color-border: #374151;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  }
+}
+
+body {
+  font-family: 'Montserrat', -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Header */
+.header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header__logo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.header__subtitle {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.3px;
+}
+
+/* Main Content */
+.container {
+  flex: 1;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Course Card */
+.course-card {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface) 100%);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid var(--color-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+}
+
+.course-card__delete {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 0.9rem;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: background 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: var(--color-border);
+}
+
+.btn-logout i {
+  width: 18px;
+  height: 18px;
+}
+
+/* Ekran 480px ve altındaysa (mobil) */
+@media (max-width: 480px) {
+  .btn-logout {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+
+  .btn-logout i {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  padding: 0.25rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-back:hover {
+  background: var(--color-border);
+}
+
+.btn-back:focus-visible {
+  outline: 2px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.btn-back i {
+  width: 22px;
+  height: 22px;
+}
+
+
+
+/* Eğer 3 nokta menüye geçtiysen, eski sil butonunu gizlemek için aç: */
+.course-card__delete { display: none !important; }
+
+.course-card:hover .course-card__delete {
+  opacity: 1;
+}
+
+.course-card__delete:hover {
+  background-color: #ef4444;
+  color: white;
+  transform: scale(1.1);
+}
+
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), #06b6d4);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover::before {
+  transform: scaleX(1);
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(20, 184, 166, 0.15);
+  border-color: var(--color-primary);
+}
+
+.course-card__title {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.3px;
+
+  /* Uzun başlıklar taşmasın */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.course-card__count {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.course-card__label {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: 0.5px;
+}
+
+/* Fixed Bottom Button */
+.fixed-button {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+.btn-add {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-add:hover {
+  background-color: #0d9488;
+  transform: scale(1.01);
+}
+
+.btn-add:active {
+  transform: scale(0.99);
+}
+
+.btn-add:focus-visible {
+  outline: 3px solid rgba(20, 184, 166, 0.4);
+  outline-offset: 2px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  display: none; /* Varsayılan olarak gizli */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+  /* iOS-like blur (destek varsa) */
+  backdrop-filter: saturate(120%) blur(2px);
+}
+
+.modal-overlay.active {
+  display: flex; /* .active class'ı eklenince görünür */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Box */
+.modal {
+  background-color: var(--color-surface);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s ease;
+
+  /* Küçük ekranda taşarsa kaydırılsın */
+  max-height: 85vh;
+  overflow: auto;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.modal__input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  transition: border-color 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.modal__input:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.modal__buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.modal__button {
+  flex: 1;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal__button--primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.modal__button--primary:hover {
+  background-color: #0d9488;
+}
+
+.modal__button--secondary {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.modal__button--secondary:hover {
+  background-color: var(--color-border);
+}
+
+.modal__button--danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.modal__button--danger:hover {
+  background-color: #dc2626;
+}
+
+.modal__warning {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal__warning-icon {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #ef4444;
+}
+
+.modal__warning-text {
+  color: #ef4444;
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.modal__course-name {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.modal__confirmation-text {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.9375rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Spacing for fixed button */
+.spacer {
+  height: 80px;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@media (min-width: 640px) {
+  .header {
+    padding: 1.5rem 2rem;
+  }
+
+  .header__logo {
+    font-size: 2rem;
+  }
+
+  .header__subtitle {
+    font-size: 1rem;
+  }
+
+  .container {
+    padding: 3rem 2rem;
+  }
+
+  .course-card {
+    padding: 3rem 2rem;
+  }
+
+  .fixed-button {
+    padding: 1.5rem 2rem;
+  }
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-text);
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.btn-back:hover {
+  background: var(--color-border);
+}
+.btn-back:focus-visible {
+  outline: 2px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+/* Boş liste mesajları */
+.empty-message {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  padding: 2rem 1rem;
+}
+
+/* 3 nokta menü */
+.card-menu-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--color-text-secondary);
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+  width: var(--tap-size);
+  height: var(--tap-size);
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+}
+.card-menu-btn:hover {
+  opacity: 1;
+  background: rgba(0,0,0,0.03);
+}
+@media (prefers-color-scheme: dark) {
+  .card-menu-btn:hover {
+    background: rgba(255,255,255,0.06);
+  }
+}
+
+.card-menu {
+  position: absolute;
+  top: 36px;
+  right: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  display: none;
+  flex-direction: column;
+  min-width: var(--menu-min-width);
+  z-index: 5;
+  overflow: hidden;
+}
+.card-menu.active { display: flex; }
+
+.card-menu button {
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+.card-menu button:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.unit-card__count {
+  font-size: 1.25rem;      /* daha küçük */
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card-menu button:hover {
+    background: rgba(255,255,255,0.06);
+  }
+}
+
+/* Hareket hassasiyeti olan kullanıcılar için animasyonları azalt */
+@media (prefers-reduced-motion: reduce) {
+  .course-card, .modal, .modal-overlay {
+    transition: none !important;
+    animation: none !important;
+  }
+}

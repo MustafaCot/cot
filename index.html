@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ÇÇP - Çok Çalışma Portalı</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#14b8a6">
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  
+</head>
+<body>
+  
+  <!-- Header -->
+<header class="header" style="justify-content: space-between;">
+  <div style="display:flex; align-items:center; gap:0.75rem;">
+    <h1 class="header__logo">ÇÇP</h1>
+    <p class="header__subtitle">Çot Çalışma Portalı</p>
+  </div>
+  <button id="logoutBtn" class="btn-logout">
+    <i data-lucide="log-out"></i>
+    Çıkış
+  </button>
+</header>
+
+
+  <!-- Main Content -->
+  <!-- Konu kartları buraya script.js tarafından Firebase'den çekilerek yüklenecek -->
+  <main class="container" id="courseContainer">
+    
+    <!-- Spacer for fixed button -->
+    <div class="spacer"></div>
+
+  </main>
+
+  <!-- Fixed Bottom Button -->
+  <div class="fixed-button">
+    <!-- Hata veren onclick="openModal()" kaldırıldı. Bağlama script.js içinde yapılacak. -->
+    <button class="btn-add" id="addCourseBtn">Konu Ekle</button>
+  </div>
+
+  <!-- Modal for Adding Course -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <h3 class="modal__title">Eklemek istediğiniz konuyu lütfen yazınız</h3>
+      <input 
+        type="text" 
+        class="modal__input" 
+        id="courseInput" 
+        placeholder="Örn: Matematik"
+        onkeypress="handleKeyPress(event)"
+      >
+      <div class="modal__buttons">
+        <button class="modal__button modal__button--secondary" onclick="closeModal()">İptal</button>
+        <button class="modal__button modal__button--primary" onclick="addCourse()">Ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Delete Confirmation (1. Adım) -->
+  <div class="modal-overlay" id="deleteModalOverlay" onclick="closeDeleteModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal__warning">
+        <div class="modal__warning-icon">⚠️</div>
+        <div class="modal__warning-text">
+          DİKKAT! Bu işlem geri alınamaz!<br>
+          Tüm verileriniz kalıcı olarak silinecektir!
+        </div>
+      </div>
+      <p class="modal__confirmation-text">
+        <span class="modal__course-name" id="deleteCourseName"></span> konusunu silmek istediğinizden emin misiniz?
+        <br><br>
+        Bu konu içerisindeki tüm dersler, notlar ve ilerleme kaydınız <strong>kalıcı olarak</strong> silinecektir.
+      </p>
+      <div class="modal__buttons">
+        <button class="modal__button modal__button--secondary" onclick="closeDeleteModal()">İptal Et</button>
+        <button class="modal__button modal__button--danger" onclick="showFinalConfirmation()">Sil</button>
+      </div>
+    </div>
+  </div>
+<!-- Modal: Konu Düzenle -->
+<div class="modal-overlay" id="editCourseModalOverlay" onclick="closeEditCourseModalOnOverlay(event)">
+  <div class="modal">
+    <h3 class="modal__title">Konu Düzenle</h3>
+    <input 
+      type="text" 
+      class="modal__input" 
+      id="editCourseInput" 
+      placeholder="Konu adı"
+      onkeypress="handleEditCourseKeyPress(event)"
+    >
+    <div class="modal__buttons">
+      <button class="modal__button modal__button--secondary" onclick="closeEditCourseModal()">İptal</button>
+      <button class="modal__button modal__button--primary" onclick="saveCourseEdit()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Final Confirmation Modal (2. Adım) -->
+  <div class="modal-overlay" id="finalConfirmModalOverlay" onclick="closeFinalConfirmModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal__warning">
+        <div class="modal__warning-icon">🛑</div>
+        <div class="modal__warning-text">
+          SON UYARI!<br>
+          Bu işlem kesinlikle geri alınamaz!
+        </div>
+      </div>
+      <p class="modal__confirmation-text">
+        <span class="modal__course-name" id="finalDeleteCourseName"></span> konusunu kalıcı olarak silmek istediğinizi bir kez daha onaylayın.
+        <br><br>
+        Tüm emekleriniz kaybolacak!
+      </p>
+      <div class="modal__buttons">
+        <button class="modal__button modal__button--secondary" onclick="closeFinalConfirmModal()">Hayır, Silme</button>
+        <button class="modal__button modal__button--danger" onclick="deleteCourse()">Evet, Kesinlikle Sil</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Script'i yükle -->
+   <script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
+   <script type="module" src="auth-guard.js"></script>
+  <script type="module" src="script.js"></script>
+
+  
+  <!-- Mobil App -->
+   <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('✅ Service Worker kayıt edildi.'))
+      .catch(err => console.error('Service Worker hatası:', err));
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ÇÇP - Üniteler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#14b8a6">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" style="justify-content: space-between;">
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <!-- Geri Butonu -->
+ <button class="btn-back" onclick="goBack()">
+  <i data-lucide="arrow-left"></i>
+</button>
+      <h1 class="header__logo">ÇÇP</h1>
+    </div>
+    <p class="header__subtitle" id="courseTitle">Üniteler</p>
+  </header>
+
+  <!-- Ünite Listesi -->
+  <main class="container" id="unitContainer">
+    <div class="spacer"></div>
+  </main>
+
+  <!-- Ünite Ekle Butonu -->
+  <div class="fixed-button">
+    <button class="btn-add" id="addUnitBtn">Ünite Ekle</button>
+  </div>
+
+  <!-- Modal: Ünite Ekle -->
+  <div class="modal-overlay" id="unitModalOverlay" onclick="closeUnitModalOnOverlay(event)">
+    <div class="modal">
+      <h3 class="modal__title">Yeni ünite adı girin</h3>
+      <input 
+        type="text" 
+        class="modal__input" 
+        id="unitInput" 
+        placeholder="Örn: 1. Ünite - Fonksiyonlar"
+        onkeypress="handleUnitKeyPress(event)"
+      >
+      <div class="modal__buttons">
+        <button class="modal__button modal__button--secondary" onclick="closeUnitModal()">İptal</button>
+        <button class="modal__button modal__button--primary" onclick="addUnit()">Ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Silme Onayı (1. adım) -->
+  <div class="modal-overlay" id="deleteUnitModalOverlay" onclick="closeDeleteUnitModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal__warning">
+        <div class="modal__warning-icon">⚠️</div>
+        <div class="modal__warning-text">Bu üniteyi silmek istediğinize emin misiniz?</div>
+      </div>
+      <p class="modal__confirmation-text">
+        <span class="modal__course-name" id="deleteUnitName"></span> ünitesi silinecek.
+      </p>
+      <div class="modal__buttons">
+        <button class="modal__button modal__button--secondary" onclick="closeDeleteUnitModal()">İptal</button>
+        <button class="modal__button modal__button--danger" onclick="showFinalUnitConfirmation()">Sil</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Ünite Düzenle -->
+<div class="modal-overlay" id="editUnitModalOverlay" onclick="closeEditUnitModalOnOverlay(event)">
+  <div class="modal">
+    <h3 class="modal__title">Ünite Düzenle</h3>
+    <input 
+      type="text" 
+      class="modal__input" 
+      id="editUnitInput" 
+      placeholder="Ünite adı"
+      onkeypress="handleEditUnitKeyPress(event)"
+    >
+    <div class="modal__buttons">
+      <button class="modal__button modal__button--secondary" onclick="closeEditUnitModal()">İptal</button>
+      <button class="modal__button modal__button--primary" onclick="saveUnitEdit()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Modal: Kesin Onay (2. adım) -->
+  <div class="modal-overlay" id="finalConfirmUnitModalOverlay" onclick="closeFinalConfirmUnitModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal__warning">
+        <div class="modal__warning-icon">🛑</div>
+        <div class="modal__warning-text">Son onay! Bu işlem geri alınamaz.</div>
+      </div>
+      <p class="modal__confirmation-text">
+        <span class="modal__course-name" id="finalDeleteUnitName"></span> ünitesini kalıcı olarak silmek istediğinizi onaylayın.
+      </p>
+      <div class="modal__buttons">
+        <button class="modal__button modal__button--secondary" onclick="closeFinalConfirmUnitModal()">Hayır</button>
+        <button class="modal__button modal__button--danger" onclick="deleteUnit()">Evet, Sil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
+   <script type="module" src="auth-guard.js"></script>
+  <script type="module" src="units.js"></script>
+  
+  <script>
+function goBack() {
+  // Tarayıcı önbelleği yerine sayfayı yeniden yükle
+  if (document.referrer && !document.referrer.includes('login.html')) {
+    window.location.replace(document.referrer);
+  } else {
+    window.location.href = 'index.html';
+  }
+}
+</script>
+
+</body>
+</html>
